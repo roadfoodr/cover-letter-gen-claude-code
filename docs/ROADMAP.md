@@ -1,6 +1,6 @@
 # Cover Letter Generator - Implementation Roadmap
 
-## Status: Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ | Phase 4 Not Started
+## Status: Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ | Phase 4 Complete ✅ | Phase 5 Not Started
 
 ### Completed: Phase 1 - Project Setup
 
@@ -139,14 +139,24 @@ All four skill files have been created with comprehensive instructions. Each ski
 
 ---
 
-### Phase 4: Refinement Command (Not Started)
+### Completed: Phase 4 - Refinement Command
 
-### Phase 4: Refinement Command (Not Started)
-Create `.claude/commands/refine-cover-letter.md` for iterative improvements:
+**Date Completed:** 2026-01-11
 
-- Takes `$COMPANY` and `$DATE` arguments
-- Re-runs only letter-composer using existing analysis + feedback
-- Allows iteration without re-analyzing inputs
+#### Refinement Command Created
+- **`.claude/commands/refine-cover-letter.md`** ✅
+  - Takes `$COMPANY` and `$DATE` arguments to identify which run to refine
+  - Validates that output directory and all analysis files exist
+  - Checks for `feedback.md` file (warns if missing but continues)
+  - Re-runs only the letter-composer skill using:
+    - Existing analysis JSONs (job_analysis, resume_matches, github_matches)
+    - Sample letters from `inputs/sample_letters/`
+    - Optional feedback.md for refinement instructions
+    - Config.yaml for preferences
+  - Overwrites `cover_letter.md` and `reasoning.md` in place
+  - Maintains style matching from sample letters while incorporating feedback
+  - Provides summary with word count comparison
+  - Enables quick iteration without re-analyzing inputs
 
 ### Phase 5: Testing & Documentation (Not Started)
 - Test with real job description
