@@ -1,6 +1,6 @@
 # Cover Letter Generator - Implementation Roadmap
 
-## Status: Phase 1 Complete ✅
+## Status: Phase 1 Complete ✅ | Phase 2 In Progress 🚧
 
 ### Completed: Phase 1 - Project Setup
 
@@ -61,14 +61,19 @@ Four comprehensive JSON Schema files (Draft 7) for structured output validation:
 
 ## Next Steps
 
-### Phase 2: Skill Files (Not Started)
-Create four `SKILL.md` files that Claude Code will read and follow:
+### Phase 2: Skill Files (In Progress)
 
-1. **`skills/job-analyzer/SKILL.md`**
+#### Completed Skills
+
+1. **`skills/job-analyzer/SKILL.md`** ✅
+   - **Date Completed:** 2026-01-11
    - Extracts requirements, culture signals, key themes from job postings
    - Input: `inputs/jobs/{company}/job_description.md`
    - Output: `outputs/{company}_{date}/analysis/job_analysis.json`
-   - Must validate against `schemas/job-analysis.json`
+   - Validates against `schemas/job-analysis.json`
+   - Includes comprehensive processing instructions, schema reference, output format example, and edge case handling
+
+#### Remaining Skills
 
 2. **`skills/resume-matcher/SKILL.md`**
    - Finds relevant experience matching job requirements
