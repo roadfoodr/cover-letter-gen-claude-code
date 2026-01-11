@@ -81,19 +81,22 @@ Four comprehensive JSON Schema files (Draft 7) for structured output validation:
    - Validates against `schemas/resume-matches.json`
    - Includes comprehensive processing instructions for matching resume sections, calculating relevance scores (0-10), creating requirement mappings, identifying strengths and gaps, and extracting years of experience
 
-#### Remaining Skills
-
-3. **`skills/github-scout/SKILL.md`**
+3. **`skills/github-scout/SKILL.md`** ✅
+   - **Date Completed:** 2026-01-11
    - Identifies GitHub projects that reinforce qualifications
-   - Input: job_analysis.json + GitHub API data
+   - Input: job_analysis.json + GitHub API data (from config.yaml)
    - Output: `outputs/{company}_{date}/analysis/github_matches.json`
-   - Must validate against `schemas/github-matches.json`
-   - Should cache API responses to `cache/github/repos.json`
+   - Validates against `schemas/github-matches.json`
+   - Caches API responses to `cache/github/repos.json`
+   - Includes comprehensive processing instructions for fetching repositories, matching to job requirements, calculating relevance scores (0-10), creating skill mappings, and handling edge cases
+
+#### Remaining Skills
 
 4. **`skills/letter-composer/SKILL.md`**
    - Synthesizes everything into final cover letter
    - Input: All three analysis JSONs + sample letters
    - Output: `outputs/{company}_{date}/cover_letter.md` and `reasoning.md`
+   - Must validate against `schemas/composed-letter.json` (for metadata)
 
 Each skill should include:
 - Clear input/output specifications
