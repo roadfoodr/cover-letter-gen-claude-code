@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Composed Letter Metadata",
+  "description": "Optional metadata structure for the composed cover letter (the actual letter is markdown, this provides structure if needed)",
+  "type": "object",
+  "properties": {
+    "paragraphs": {
+      "type": "array",
+      "description": "Paragraph-level metadata (optional, for analysis purposes)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "paragraph_number": {
+            "type": "integer",
+            "description": "Paragraph index (1-based)"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose of this paragraph (e.g., 'introduction', 'experience highlight', 'skills demonstration', 'closing')"
+          },
+          "source_materials": {
+            "type": "array",
+            "description": "Which analysis artifacts informed this paragraph",
+            "items": {
+              "type": "string",
+              "enum": ["job_analysis", "resume_matches", "github_matches", "sample_letters"]
+            }
+          }
+        }
+      }
+    },
+    "style_notes": {
+      "type": "object",
+      "description": "Notes about style choices made based on sample letters",
+      "properties": {
+        "tone": {
+          "type": "string",
+          "description": "Overall tone (e.g., 'professional', 'enthusiastic', 'conversational')"
+        },
+        "length": {
+          "type": "string",
+          "description": "Target length category (e.g., 'concise', 'moderate', 'detailed')"
+        },
+        "key_style_elements": {
+          "type": "array",
+          "description": "Style elements adopted from sample letters",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+

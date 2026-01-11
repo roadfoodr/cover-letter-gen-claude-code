@@ -1,0 +1,38 @@
+# Output files - generated cover letters and analysis artifacts
+outputs/
+
+# Cache files - GitHub API responses and other cached data
+cache/github/*.json
+!cache/github/.gitkeep
+
+# Sensitive input files - user's actual resume and job applications
+# Keep the template/example files, but ignore actual user data
+inputs/resume.md
+!inputs/resume.md.example
+inputs/jobs/**/job_description.md
+inputs/sample_letters/*.md
+!inputs/sample_letters/example.md
+
+# Configuration with sensitive data
+config.yaml
+!config.yaml.example
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.log
+
+# Claude Code specific (if any)
+.claude/.cache/
+

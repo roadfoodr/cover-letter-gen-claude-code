@@ -1,0 +1,57 @@
+# Job Description
+
+<!-- 
+  EXAMPLE FILE - Copy this to create your actual job descriptions
+  
+  To add a job description:
+  1. Create a directory: inputs/jobs/{company_name}/
+  2. Copy this file to: inputs/jobs/{company_name}/job_description.md
+  3. Replace the content below with the actual job posting
+  
+  The job description should be in markdown format and include:
+  - Company name and role title
+  - Job requirements and qualifications
+  - Responsibilities
+  - Company culture and values (if mentioned)
+  - Any other relevant details from the job posting
+-->
+
+## [Company Name] - [Job Title]
+
+### About the Role
+
+[Description of the role and what the company is looking for]
+
+### Responsibilities
+
+- [Key responsibility 1]
+- [Key responsibility 2]
+- [Key responsibility 3]
+
+### Requirements
+
+**Required:**
+- [Required qualification 1]
+- [Required qualification 2]
+- [Required qualification 3]
+
+**Preferred:**
+- [Preferred qualification 1]
+- [Preferred qualification 2]
+
+### Technical Skills
+
+- [Technical skill 1]
+- [Technical skill 2]
+- [Technical skill 3]
+
+### About [Company Name]
+
+[Company description, culture, values, etc.]
+
+### Benefits
+
+- [Benefit 1]
+- [Benefit 2]
+- [Benefit 3]
+

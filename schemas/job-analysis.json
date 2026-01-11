@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Job Analysis",
+  "description": "Structured analysis of a job posting, extracting requirements, culture signals, and key themes",
+  "type": "object",
+  "required": ["requirements", "culture_signals", "themes"],
+  "properties": {
+    "requirements": {
+      "type": "array",
+      "description": "Technical skills, experience levels, and qualifications required for the position",
+      "items": {
+        "type": "object",
+        "required": ["category", "items"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Category of requirement (e.g., 'Technical Skills', 'Experience Level', 'Education', 'Certifications')"
+          },
+          "items": {
+            "type": "array",
+            "description": "List of specific requirements in this category",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["required", "preferred", "nice-to-have"],
+            "description": "Priority level of this requirement category"
+          }
+        }
+      }
+    },
+    "culture_signals": {
+      "type": "object",
+      "description": "Signals about company culture, values, and work style",
+      "properties": {
+        "values": {
+          "type": "array",
+          "description": "Company values mentioned in the job posting",
+          "items": {
+            "type": "string"
+          }
+        },
+        "work_style": {
+          "type": "array",
+          "description": "Work style indicators (e.g., 'remote-first', 'collaborative', 'fast-paced')",
+          "items": {
+            "type": "string"
+          }
+        },
+        "team_dynamics": {
+          "type": "array",
+          "description": "Team and collaboration signals",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "themes": {
+      "type": "array",
+      "description": "Key themes, focus areas, and priorities for the role",
+      "items": {
+        "type": "object",
+        "required": ["theme", "description"],
+        "properties": {
+          "theme": {
+            "type": "string",
+            "description": "Main theme or focus area"
+          },
+          "description": {
+            "type": "string",
+            "description": "Explanation of why this theme is important"
+          },
+          "emphasis": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "How much emphasis the job posting places on this theme"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of the role and what the company is looking for"
+    }
+  }
+}
+

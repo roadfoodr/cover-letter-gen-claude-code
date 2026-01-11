@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Resume Matches",
+  "description": "Matched experience sections from resume that address job requirements",
+  "type": "object",
+  "required": ["matches"],
+  "properties": {
+    "matches": {
+      "type": "array",
+      "description": "Resume sections that match job requirements",
+      "items": {
+        "type": "object",
+        "required": ["section", "content", "relevance"],
+        "properties": {
+          "section": {
+            "type": "string",
+            "description": "Resume section type (e.g., 'Experience', 'Education', 'Projects', 'Skills')"
+          },
+          "content": {
+            "type": "string",
+            "description": "The actual content from the resume that matches"
+          },
+          "relevance": {
+            "type": "object",
+            "required": ["score", "explanation"],
+            "properties": {
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Relevance score from 0-10 indicating how well this matches job requirements"
+              },
+              "explanation": {
+                "type": "string",
+                "description": "Explanation of why this resume section is relevant"
+              }
+            }
+          },
+          "requirement_mappings": {
+            "type": "array",
+            "description": "Which specific job requirements this resume section addresses",
+            "items": {
+              "type": "object",
+              "required": ["requirement", "how_it_matches"],
+              "properties": {
+                "requirement": {
+                  "type": "string",
+                  "description": "The job requirement being addressed"
+                },
+                "how_it_matches": {
+                  "type": "string",
+                  "description": "How this resume section demonstrates the requirement"
+                }
+              }
+            }
+          },
+          "years_experience": {
+            "type": "number",
+            "description": "Years of experience demonstrated in this section (if applicable)"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Overall assessment of how well the resume matches the job requirements"
+    },
+    "strengths": {
+      "type": "array",
+      "description": "Key strengths that align with the job",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "description": "Areas where the resume may not fully address job requirements",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+

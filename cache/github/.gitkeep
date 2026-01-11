@@ -1,0 +1,3 @@
+# This file ensures the cache/github directory is tracked by git
+# GitHub API responses will be cached here to avoid repeated API calls
+

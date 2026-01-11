@@ -1,0 +1,4 @@
+# This file ensures the jobs directory is tracked by git
+# Users will add job descriptions here in subdirectories like:
+# inputs/jobs/{company_name}/job_description.md
+

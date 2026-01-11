@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GitHub Matches",
+  "description": "GitHub repositories that demonstrate skills relevant to the job",
+  "type": "object",
+  "required": ["matches"],
+  "properties": {
+    "matches": {
+      "type": "array",
+      "description": "GitHub repositories that match job requirements",
+      "items": {
+        "type": "object",
+        "required": ["repository", "relevance"],
+        "properties": {
+          "repository": {
+            "type": "object",
+            "required": ["name", "url", "description"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Repository name"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "GitHub repository URL"
+              },
+              "description": {
+                "type": "string",
+                "description": "Repository description"
+              },
+              "language": {
+                "type": "string",
+                "description": "Primary programming language"
+              },
+              "stars": {
+                "type": "integer",
+                "description": "Number of stars"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last update timestamp"
+              }
+            }
+          },
+          "relevance": {
+            "type": "object",
+            "required": ["score", "explanation"],
+            "properties": {
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Relevance score from 0-10 indicating how well this project demonstrates job requirements"
+              },
+              "explanation": {
+                "type": "string",
+                "description": "Explanation of why this repository is relevant to the job"
+              }
+            }
+          },
+          "skill_mappings": {
+            "type": "array",
+            "description": "Which specific job skills this repository demonstrates",
+            "items": {
+              "type": "object",
+              "required": ["skill", "how_it_demonstrates"],
+              "properties": {
+                "skill": {
+                  "type": "string",
+                  "description": "The job skill being demonstrated"
+                },
+                "how_it_demonstrates": {
+                  "type": "string",
+                  "description": "How this repository demonstrates the skill"
+                }
+              }
+            }
+          },
+          "key_features": {
+            "type": "array",
+            "description": "Key features or aspects of the project that are relevant",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Overall assessment of how GitHub projects reinforce qualifications"
+    }
+  }
+}
+

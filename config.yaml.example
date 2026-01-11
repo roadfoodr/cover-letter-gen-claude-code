@@ -1,0 +1,22 @@
+# Cover Letter Generator Configuration
+
+# GitHub username (required)
+# Used to fetch public repositories for project matching
+github_username: ""
+
+# Optional preferences
+preferences:
+  # Tone preferences for cover letters
+  # Options: "professional", "enthusiastic", "conversational", "formal"
+  tone: "professional"
+  
+  # Target length for cover letters
+  # Options: "concise" (200-300 words), "moderate" (300-500 words), "detailed" (500+ words)
+  length: "moderate"
+  
+  # Whether to emphasize specific aspects
+  emphasize:
+    - "technical_skills"
+    - "relevant_experience"
+    # Options: "technical_skills", "relevant_experience", "projects", "education", "culture_fit"
+
