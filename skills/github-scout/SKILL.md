@@ -17,7 +17,7 @@ This file contains the structured job analysis from the job-analyzer skill, incl
 **Secondary Input File:** `config.yaml`
 
 This configuration file contains:
-- `github_username`: The GitHub username to fetch repositories for (required)
+- `github_username`: The GitHub username to fetch repositories for (optional)
 - Optional preferences (not used by this skill)
 
 **Optional Input File:** `cache/github/repos.json`
@@ -38,9 +38,14 @@ The output must be valid JSON that strictly conforms to the schema defined in `s
 
 ### 1. Read Configuration
 
-Read `config.yaml` to obtain the GitHub username. If the username is missing or empty, you cannot proceed with fetching repositories. In this case, output an empty matches array and note this in the summary.
+Read `config.yaml` to obtain the GitHub username. If the username is missing or empty:
+- First check if `cache/github/repos.json` exists (regardless of age)
+- If cache exists, proceed with matching using cached data
+- If cache does not exist, output an empty matches array and note in the summary that no GitHub username was configured and no cache was available
 
 ### 2. Fetch GitHub Repository Data
+
+**If GitHub username is configured:**
 
 **Check Cache First:**
 - Check if `cache/github/repos.json` exists
@@ -64,6 +69,13 @@ Read `config.yaml` to obtain the GitHub username. If the username is missing or 
 - After fetching, save the raw repository data to `cache/github/repos.json`
 - This allows future runs to use cached data and avoid API rate limits
 - Ensure the cache directory exists before writing
+
+**If GitHub username is NOT configured:**
+
+**Check Cache Only:**
+- Check if `cache/github/repos.json` exists (regardless of age)
+- If cache exists, use the cached data for matching (no API fetch possible without username)
+- If cache does not exist, you cannot proceed - this case should have been handled in step 1, but if reached here, output empty matches array
 
 ### 3. Match Repositories to Job Requirements
 
@@ -222,27 +234,35 @@ Read the schema file at `schemas/github-matches.json` for complete validation ru
 ## Execution Steps
 
 1. Read the configuration file from `config.yaml` to obtain the GitHub username
-2. Check if `cache/github/repos.json` exists and is recent (within 24 hours)
-3. If cache exists and is fresh, read repository data from cache
-4. If cache is missing or stale, fetch repository data from GitHub API using the username
-5. Save fetched repository data to `cache/github/repos.json` for future use
-6. Read the job analysis file from `outputs/{company}_{date}/analysis/job_analysis.json`
-7. For each repository, analyze how it matches job requirements:
+2. If GitHub username is configured:
+   - Check if `cache/github/repos.json` exists and is recent (within 24 hours)
+   - If cache exists and is fresh, read repository data from cache
+   - If cache is missing or stale, fetch repository data from GitHub API using the username
+   - Save fetched repository data to `cache/github/repos.json` for future use
+3. If GitHub username is NOT configured:
+   - Check if `cache/github/repos.json` exists (regardless of age)
+   - If cache exists, read repository data from cache
+   - If cache does not exist, proceed to step 6 with no repository data (will output empty matches)
+4. Read the job analysis file from `outputs/{company}_{date}/analysis/job_analysis.json`
+5. For each repository (if any), analyze how it matches job requirements:
    - Compare repository languages, technologies, and descriptions to required technical skills
    - Match repository themes to job key themes
    - Consider repository quality indicators (stars, updates, documentation)
-8. Calculate relevance scores (0-10) for each repository based on matches
-9. Create skill mappings for repositories with relevance scores of 3 or higher
-10. Identify key features for repositories with relevance scores of 5 or higher
-11. Generate an overall summary assessment
-12. Structure the output according to the schema
-13. Validate that all required fields are present
-14. Write the JSON output to `outputs/{company}_{date}/analysis/github_matches.json`
-15. Ensure the output directory exists before writing
+6. Calculate relevance scores (0-10) for each repository based on matches
+7. Create skill mappings for repositories with relevance scores of 3 or higher
+8. Identify key features for repositories with relevance scores of 5 or higher
+9. Generate an overall summary assessment
+10. Structure the output according to the schema
+11. Validate that all required fields are present
+12. Write the JSON output to `outputs/{company}_{date}/analysis/github_matches.json`
+13. Ensure the output directory exists before writing
 
 ## Edge Cases
 
-- **Missing GitHub username**: If `github_username` is missing or empty in config.yaml, output an empty matches array `[]` and include a note in the summary explaining that no GitHub username was configured
+- **Missing GitHub username**: If `github_username` is missing or empty in config.yaml:
+  - First check if `cache/github/repos.json` exists (regardless of age)
+  - If cache exists, use it for matching and proceed normally
+  - If cache does not exist, output an empty matches array `[]` and include a note in the summary explaining that no GitHub username was configured and no cache was available
 - **No repositories found**: If the user has no public repositories, output an empty matches array and note this in the summary
 - **API failures**: If GitHub API calls fail, check if cached data exists and use it even if stale. If no cache exists, output an empty matches array and note the API failure in the summary
 - **Repositories with no matches**: Only include repositories with relevance scores of 1 or higher. Repositories with score 0 should be excluded from the matches array

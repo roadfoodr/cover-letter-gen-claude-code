@@ -49,7 +49,7 @@ All intermediate analysis artifacts (JSON files) are saved to the output directo
 2. **Prepare your inputs:**
    - Add your resume(s) to `inputs/resumes/` folder (you can add multiple versions - the system will consolidate them automatically).
    - Add 2-10 sample cover letters to `inputs/sample_letters/` (the more samples, the better the style matching)
-   - Add job descriptions to `inputs/jobs/{company}/` folder. You can use any filename (e.g., `job_description.md`, `job_description_avepoint.md`, `job_description_2024-01-15.md`). The system will prefer `job_description.md` if present, otherwise use any `.md` file found.
+   - Add job descriptions to `inputs/jobs/{company}/` folder. You can use any filename (e.g., `job_description.md`, `job_description_BigTechCo.md`, `job_description_2024-01-15.md`). The system will prefer `job_description.md` if present, otherwise use any `.md` file found.
 
 That's it! The tool is ready to use.
 

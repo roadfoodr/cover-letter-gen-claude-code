@@ -1,7 +1,8 @@
 # Cover Letter Generator Configuration
 
-# GitHub username (required)
+# GitHub username (optional, but recommended)
 # Used to fetch public repositories for project matching
+# If not configured, the pipeline will check for cached GitHub data and use it if available
 github_username: ""
 
 # Optional preferences

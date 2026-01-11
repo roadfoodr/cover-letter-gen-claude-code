@@ -7,7 +7,8 @@
 
 ### Step 1: Setup and Validation
 
-1. Read `config.yaml` to extract the GitHub username (required field)
+1. Read `config.yaml` to extract the GitHub username (optional field)
+   - If GitHub username is not configured or empty, issue an informational message: "GitHub username not configured. Will check for cached GitHub data; if unavailable, pipeline will proceed with resume matching only."
 2. Get the current date in `YYYY-MM-DD` format
 3. Create output directory structure: `outputs/{company}_{date}/analysis/`
 4. Verify that `inputs/jobs/{company}/` directory exists
@@ -48,23 +49,37 @@
 
 1. Read and follow the instructions in `skills/github-scout/SKILL.md`
 2. Read the GitHub username from `config.yaml` (from Step 1)
-3. Check if `cache/github/repos.json` exists:
-   - If it exists and is recent (less than 24 hours old), use cached data
-   - Otherwise, fetch repositories from GitHub API using the username
-   - Save/update the cache to `cache/github/repos.json`
-4. Read the job analysis from `outputs/{company}_{date}/analysis/job_analysis.json` (from Step 2)
-5. Perform the GitHub matching analysis according to the skill instructions
-6. Write the output to `outputs/{company}_{date}/analysis/github_matches.json`
-7. Validate the output JSON against `schemas/github-matches.json` (Draft 7 JSON Schema)
-   - If validation fails, fix the output and re-validate before proceeding
+3. If GitHub username is configured:
+   - Check if `cache/github/repos.json` exists:
+     - If it exists and is recent (less than 24 hours old), use cached data
+     - Otherwise, fetch repositories from GitHub API using the username
+     - Save/update the cache to `cache/github/repos.json`
+   - Read the job analysis from `outputs/{company}_{date}/analysis/job_analysis.json` (from Step 2)
+   - Perform the GitHub matching analysis according to the skill instructions
+   - Write the output to `outputs/{company}_{date}/analysis/github_matches.json`
+   - Validate the output JSON against `schemas/github-matches.json` (Draft 7 JSON Schema)
+     - If validation fails, fix the output and re-validate before proceeding
+4. If GitHub username is NOT configured:
+   - Check if `cache/github/repos.json` exists (regardless of age)
+   - If cache exists:
+     - Issue message: "Using cached GitHub data - username not configured"
+     - Read repository data from cache
+     - Read the job analysis from `outputs/{company}_{date}/analysis/job_analysis.json` (from Step 2)
+     - Perform the GitHub matching analysis according to the skill instructions
+     - Write the output to `outputs/{company}_{date}/analysis/github_matches.json`
+     - Validate the output JSON against `schemas/github-matches.json` (Draft 7 JSON Schema)
+       - If validation fails, fix the output and re-validate before proceeding
+   - If cache is missing:
+     - Issue message: "Skipping GitHub Scout step - no username and no cache available"
+     - Skip this step entirely (do not create `github_matches.json`)
 
 ### Step 5: Letter Composition
 
 1. Read and follow the instructions in `skills/letter-composer/SKILL.md`
-2. Read all three analysis JSONs:
-   - `outputs/{company}_{date}/analysis/job_analysis.json`
-   - `outputs/{company}_{date}/analysis/resume_matches.json`
-   - `outputs/{company}_{date}/analysis/github_matches.json`
+2. Read the required analysis JSONs:
+   - `outputs/{company}_{date}/analysis/job_analysis.json` (required)
+   - `outputs/{company}_{date}/analysis/resume_matches.json` (required)
+   - `outputs/{company}_{date}/analysis/github_matches.json` (optional - only if it exists)
 3. Read all sample letters from `inputs/sample_letters/` directory
 4. Check if `outputs/{company}_{date}/feedback.md` exists:
    - If it exists, read it and incorporate feedback into the composition
@@ -85,7 +100,8 @@
      - `outputs/{company}_{date}/reasoning.md`
      - `outputs/{company}_{date}/analysis/job_analysis.json`
      - `outputs/{company}_{date}/analysis/resume_matches.json`
-     - `outputs/{company}_{date}/analysis/github_matches.json`
+     - `outputs/{company}_{date}/analysis/github_matches.json` (only if it exists)
+   - If GitHub matching was skipped, note this in the summary
 2. Count and display the word count of the generated cover letter
 3. Confirm that all outputs were successfully created and validated
 
