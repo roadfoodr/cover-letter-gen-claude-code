@@ -1,5 +1,7 @@
 # Output files - generated cover letters and analysis artifacts
-outputs/
+outputs/*
+!outputs/example/
+!outputs/example/feedback.md.example
 
 # Cache files - GitHub API responses and other cached data
 cache/github/*.json
