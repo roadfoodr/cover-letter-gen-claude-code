@@ -6,9 +6,11 @@ This skill matches resume content against job requirements to identify relevant 
 
 ## Input
 
-**Primary Input File:** `inputs/resume.md`
+**Primary Input:** `inputs/resumes/` directory
 
-The resume is a markdown file containing the applicant's professional background. It typically includes:
+Read all `.md` files from the `inputs/resumes/` directory (excluding `resume.md.example` if present). These files contain the applicant's professional background across multiple resume versions. All versions should be treated as representing the same candidate.
+
+Each resume file typically includes:
 - Contact Information
 - Professional Summary
 - Experience (work history with roles, companies, dates, and achievements)
@@ -16,6 +18,18 @@ The resume is a markdown file containing the applicant's professional background
 - Skills (technical and soft skills)
 - Projects (optional - personal or professional projects)
 - Certifications (optional - professional certifications and licenses)
+
+**Consolidation Strategy:**
+
+Before processing, consolidate all resume files into a unified view:
+
+- **Experience**: Merge all experience entries from all resumes. Deduplicate identical roles (match by company name + job title + date overlap). When duplicates are found, prefer the version with more detailed description or more recent date.
+- **Education**: Merge all education entries. Deduplicate identical degrees (match by degree type + institution + graduation year). Prefer more detailed or recent versions.
+- **Skills**: Combine all skills lists from all resumes. Deduplicate identical skills (case-insensitive exact match). Union all unique skills.
+- **Projects**: Merge all projects from all resumes. Deduplicate by project name or similar description. Prefer more detailed versions.
+- **Certifications**: Merge all certifications. Deduplicate identical ones (match by certification name + issuing organization). Prefer more complete information.
+- **Contact Info**: Use the most complete version (prefer resume with most contact fields filled).
+- **Professional Summary**: Use the most recent or most detailed version.
 
 **Secondary Input File:** `outputs/{company}_{date}/analysis/job_analysis.json`
 
@@ -25,7 +39,7 @@ This file contains the structured job analysis from the job-analyzer skill, incl
 - Key themes (main focus areas for the role)
 - Summary of the role
 
-The company name and date will be provided in the execution context, and you should read both the resume file and the corresponding job analysis file.
+The company name and date will be provided in the execution context, and you should read all resume files from the `inputs/resumes/` directory and the corresponding job analysis file.
 
 ## Output
 
@@ -37,16 +51,23 @@ The output must be valid JSON that strictly conforms to the schema defined in `s
 
 ## Processing Instructions
 
-### 1. Parse Resume Sections
+### 1. Read and Consolidate Resume Files
 
-Read and identify all relevant sections from the resume:
-- **Experience**: Each job/role with company, dates, responsibilities, and achievements
-- **Education**: Degrees, institutions, fields of study, graduation dates
-- **Skills**: Technical skills, tools, technologies, programming languages
-- **Projects**: Personal or professional projects with descriptions and technologies used
-- **Certifications**: Professional certifications, licenses, credentials
+1. Read all `.md` files from `inputs/resumes/` directory (excluding `resume.md.example` if present)
+2. For each resume file, parse and extract all relevant sections
+3. Consolidate sections across all resumes using the deduplication and merging strategy described in the Input section above
+4. Create a unified resume view representing the complete candidate profile
 
-### 2. Match Resume Content to Job Requirements
+### 2. Parse Resume Sections
+
+From the consolidated resume view, identify all relevant sections:
+- **Experience**: Each job/role with company, dates, responsibilities, and achievements (merged from all resumes)
+- **Education**: Degrees, institutions, fields of study, graduation dates (merged from all resumes)
+- **Skills**: Technical skills, tools, technologies, programming languages (combined from all resumes)
+- **Projects**: Personal or professional projects with descriptions and technologies used (merged from all resumes)
+- **Certifications**: Professional certifications, licenses, credentials (merged from all resumes)
+
+### 3. Match Resume Content to Job Requirements
 
 For each resume section, identify matches to job requirements from the job analysis:
 
@@ -75,7 +96,7 @@ For each resume section, identify matches to job requirements from the job analy
 - Directly match certifications to certification requirements
 - Note certification dates and validity if relevant
 
-### 3. Calculate Relevance Scores
+### 4. Calculate Relevance Scores
 
 For each match, assign a relevance score from 0-10:
 
@@ -92,7 +113,7 @@ Consider the following factors when scoring:
 - Strength of evidence (concrete achievements > listed skills > implied experience)
 - Recency and relevance (recent experience > older experience)
 
-### 4. Create Requirement Mappings
+### 5. Create Requirement Mappings
 
 For each match, create requirement mappings that specify:
 - **requirement**: The specific job requirement item being addressed (from job_analysis.json)
@@ -100,14 +121,14 @@ For each match, create requirement mappings that specify:
 
 Include multiple requirement mappings if a single resume section addresses multiple requirements.
 
-### 5. Extract Years of Experience
+### 6. Extract Years of Experience
 
 For experience sections, calculate years of experience demonstrated:
 - Parse date ranges from job entries
 - Calculate total years for each role
 - Include this in the match object if applicable
 
-### 6. Identify Strengths and Gaps
+### 7. Identify Strengths and Gaps
 
 **Strengths:**
 - Resume sections with high relevance scores (7-10)
@@ -121,7 +142,7 @@ For experience sections, calculate years of experience demonstrated:
 - Missing experience levels, education, or certifications
 - Areas where the resume falls short of requirements
 
-### 7. Generate Summary
+### 8. Generate Summary
 
 Create an overall assessment (2-3 sentences) describing:
 - How well the resume matches the job requirements overall
@@ -239,23 +260,27 @@ Read the schema file at `schemas/resume-matches.json` for complete validation ru
 
 ## Execution Steps
 
-1. Read the resume file from `inputs/resume.md`
-2. Read the job analysis file from `outputs/{company}_{date}/analysis/job_analysis.json`
-3. Parse all relevant sections from the resume
-4. For each resume section, identify matches to job requirements from the job analysis
-5. Calculate relevance scores (0-10) for each match based on priority, specificity, and evidence strength
-6. Create requirement mappings showing how resume content addresses specific job requirements
-7. Extract years of experience where applicable
-8. Identify overall strengths and gaps
-9. Generate a summary assessment
-10. Structure the output according to the schema
-11. Validate that all required fields are present
-12. Write the JSON output to `outputs/{company}_{date}/analysis/resume_matches.json`
-13. Ensure the output directory exists before writing
+1. Read all `.md` files from `inputs/resumes/` directory (excluding `resume.md.example` if present)
+2. Consolidate all resume files into a unified view using the deduplication and merging strategy
+3. Read the job analysis file from `outputs/{company}_{date}/analysis/job_analysis.json`
+4. Parse all relevant sections from the consolidated resume
+5. For each resume section, identify matches to job requirements from the job analysis
+6. Calculate relevance scores (0-10) for each match based on priority, specificity, and evidence strength
+7. Create requirement mappings showing how resume content addresses specific job requirements
+8. Extract years of experience where applicable
+9. Identify overall strengths and gaps
+10. Generate a summary assessment
+11. Structure the output according to the schema
+12. Validate that all required fields are present
+13. Write the JSON output to `outputs/{company}_{date}/analysis/resume_matches.json`
+14. Ensure the output directory exists before writing
 
 ## Edge Cases
 
-- **Missing resume sections**: If a section is missing from the resume (e.g., no Projects section), simply don't include matches for that section type
+- **Empty resumes folder**: If `inputs/resumes/` directory doesn't exist or contains no `.md` files (excluding `resume.md.example`), stop execution and inform the user
+- **Single resume file**: If only one resume file exists, process it normally (consolidation step will have no effect)
+- **Missing resume sections**: If a section is missing from all resumes (e.g., no Projects section), simply don't include matches for that section type
+- **Conflicting information**: When consolidating multiple resumes with conflicting information (e.g., different dates for same role), prefer the version with more detail or more recent information
 - **No matches found**: If a resume section doesn't match any requirements, don't include it in the matches array. However, note this in the gaps section if it's a required skill
 - **Weak matches**: Include matches with low scores (1-4) if they're the only evidence for a requirement, but note the weakness in the explanation
 - **Multiple roles matching same requirement**: Create separate match entries for each role if they both address the same requirement, as they may have different relevance scores

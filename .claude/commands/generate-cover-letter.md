@@ -12,9 +12,11 @@
 3. Create output directory structure: `outputs/{company}_{date}/analysis/`
 4. Verify that `inputs/jobs/{company}/job_description.md` exists
    - If it doesn't exist, stop execution and inform the user
-5. Verify that `inputs/resume.md` exists
+5. Verify that `inputs/resumes/` directory exists
    - If it doesn't exist, stop execution and inform the user
-6. Check that at least one sample letter exists in `inputs/sample_letters/`
+6. Verify that at least one `.md` file exists in `inputs/resumes/` (excluding `resume.md.example` if present)
+   - If no resume files are found, stop execution and inform the user
+7. Check that at least one sample letter exists in `inputs/sample_letters/`
    - If none exist, warn the user but continue (style matching will be limited)
 
 ### Step 2: Job Analysis
@@ -29,11 +31,12 @@
 ### Step 3: Resume Matching
 
 1. Read and follow the instructions in `skills/resume-matcher/SKILL.md`
-2. Read `inputs/resume.md`
-3. Read the job analysis from `outputs/{company}_{date}/analysis/job_analysis.json` (created in Step 2)
-4. Perform the matching analysis according to the skill instructions
-5. Write the output to `outputs/{company}_{date}/analysis/resume_matches.json`
-6. Validate the output JSON against `schemas/resume-matches.json` (Draft 7 JSON Schema)
+2. Read all resume files from `inputs/resumes/` directory (excluding `resume.md.example` if present)
+3. Consolidate all resume files into a unified view (as specified in the skill instructions)
+4. Read the job analysis from `outputs/{company}_{date}/analysis/job_analysis.json` (created in Step 2)
+5. Perform the matching analysis according to the skill instructions
+6. Write the output to `outputs/{company}_{date}/analysis/resume_matches.json`
+7. Validate the output JSON against `schemas/resume-matches.json` (Draft 7 JSON Schema)
    - If validation fails, fix the output and re-validate before proceeding
 
 ### Step 4: GitHub Scout

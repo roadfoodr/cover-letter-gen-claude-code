@@ -47,9 +47,9 @@ All intermediate analysis artifacts (JSON files) are saved to the output directo
    - Add your GitHub username (optional, but recommended for project matching)
 
 2. **Prepare your inputs:**
-   - Add your resume to `inputs/resume.md` (use `inputs/resume.md.example` as a template)
+   - Add your resume(s) to `inputs/resumes/` folder (you can add multiple versions - the system will consolidate them automatically).
    - Add 2-10 sample cover letters to `inputs/sample_letters/` (the more samples, the better the style matching)
-   - Add job descriptions to `inputs/jobs/{company}/job_description.md` (use `inputs/jobs/example/job_description.md.example` as a template)
+   - Add job descriptions to `inputs/jobs/{company}/job_description.md`
 
 That's it! The tool is ready to use.
 

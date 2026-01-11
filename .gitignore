@@ -7,8 +7,8 @@ cache/github/*.json
 
 # Sensitive input files - user's actual resume and job applications
 # Keep the template/example files, but ignore actual user data
-inputs/resume.md
-!inputs/resume.md.example
+inputs/resumes/*.md
+!inputs/resumes/resume.md.example
 inputs/jobs/**/job_description.md
 inputs/sample_letters/*.md
 !inputs/sample_letters/example.md
