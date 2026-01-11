@@ -73,13 +73,15 @@ Four comprehensive JSON Schema files (Draft 7) for structured output validation:
    - Validates against `schemas/job-analysis.json`
    - Includes comprehensive processing instructions, schema reference, output format example, and edge case handling
 
-#### Remaining Skills
-
-2. **`skills/resume-matcher/SKILL.md`**
+2. **`skills/resume-matcher/SKILL.md`** ✅
+   - **Date Completed:** 2026-01-11
    - Finds relevant experience matching job requirements
    - Input: `inputs/resume.md` + job_analysis.json
    - Output: `outputs/{company}_{date}/analysis/resume_matches.json`
-   - Must validate against `schemas/resume-matches.json`
+   - Validates against `schemas/resume-matches.json`
+   - Includes comprehensive processing instructions for matching resume sections, calculating relevance scores (0-10), creating requirement mappings, identifying strengths and gaps, and extracting years of experience
+
+#### Remaining Skills
 
 3. **`skills/github-scout/SKILL.md`**
    - Identifies GitHub projects that reinforce qualifications
