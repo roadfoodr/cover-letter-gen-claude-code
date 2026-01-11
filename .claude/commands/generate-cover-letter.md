@@ -10,19 +10,24 @@
 1. Read `config.yaml` to extract the GitHub username (required field)
 2. Get the current date in `YYYY-MM-DD` format
 3. Create output directory structure: `outputs/{company}_{date}/analysis/`
-4. Verify that `inputs/jobs/{company}/job_description.md` exists
+4. Verify that `inputs/jobs/{company}/` directory exists
    - If it doesn't exist, stop execution and inform the user
-5. Verify that `inputs/resumes/` directory exists
+5. Verify that at least one `.md` file exists in `inputs/jobs/{company}/` (excluding `.example` files)
+   - If no job description files are found, stop execution and inform the user
+   - Note: The system will prefer `job_description.md` if present, otherwise use any `.md` file found
+6. Verify that `inputs/resumes/` directory exists
    - If it doesn't exist, stop execution and inform the user
-6. Verify that at least one `.md` file exists in `inputs/resumes/` (excluding `resume.md.example` if present)
+7. Verify that at least one `.md` file exists in `inputs/resumes/` (excluding `resume.md.example` if present)
    - If no resume files are found, stop execution and inform the user
-7. Check that at least one sample letter exists in `inputs/sample_letters/`
+8. Check that at least one sample letter exists in `inputs/sample_letters/`
    - If none exist, warn the user but continue (style matching will be limited)
 
 ### Step 2: Job Analysis
 
 1. Read and follow the instructions in `skills/job-analyzer/SKILL.md`
-2. Read the job description from `inputs/jobs/{company}/job_description.md`
+2. Find and read a job description file from `inputs/jobs/{company}/` directory:
+   - Prefer `job_description.md` if present
+   - Otherwise, use any other `.md` file found (excluding `.example` files)
 3. Perform the analysis according to the skill instructions
 4. Write the output to `outputs/{company}_{date}/analysis/job_analysis.json`
 5. Validate the output JSON against `schemas/job-analysis.json` (Draft 7 JSON Schema)

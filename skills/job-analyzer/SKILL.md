@@ -6,7 +6,9 @@ This skill extracts structured information from job description markdown files a
 
 ## Input
 
-**Input File:** `inputs/jobs/{company}/job_description.md`
+**Input Directory:** `inputs/jobs/{company}/`
+
+Read any `.md` file from the `inputs/jobs/{company}/` directory (excluding `job_description.md.example` or any other `.example` files if present). If multiple `.md` files exist, prefer `job_description.md` if present, otherwise use any `.md` file found.
 
 The input is a markdown file containing the job posting. It typically includes:
 - Company name and role title
@@ -16,7 +18,7 @@ The input is a markdown file containing the job posting. It typically includes:
 - Company culture and values
 - Benefits and other relevant details
 
-The company name will be provided in the execution context, and you should read the corresponding job description file.
+The company name will be provided in the execution context, and you should read the job description file from the corresponding company directory.
 
 ## Output
 
@@ -127,7 +129,11 @@ Read the schema file at `schemas/job-analysis.json` for complete validation rule
 
 ## Execution Steps
 
-1. Read the job description file from `inputs/jobs/{company}/job_description.md`
+1. Find and read a job description file from `inputs/jobs/{company}/` directory:
+   - Look for any `.md` file (excluding `.example` files)
+   - If `job_description.md` exists, use it
+   - Otherwise, use any other `.md` file found in the directory
+   - If no `.md` files are found (excluding examples), stop execution and inform the user
 2. Analyze the content following the processing instructions above
 3. Structure the output according to the schema
 4. Validate that all required fields are present
@@ -136,6 +142,8 @@ Read the schema file at `schemas/job-analysis.json` for complete validation rule
 
 ## Edge Cases
 
+- **No job description file found**: If no `.md` files exist in `inputs/jobs/{company}/` (excluding example files), stop execution and inform the user
+- **Multiple job description files**: If multiple `.md` files exist, prefer `job_description.md` if present, otherwise use the first one found
 - **Missing sections**: If certain sections are missing from the job description, use empty arrays or omit optional fields as appropriate
 - **Ambiguous requirements**: When priority is unclear, default to "preferred" rather than "required"
 - **Implicit requirements**: Only extract explicitly stated requirements; avoid inferring requirements that aren't mentioned

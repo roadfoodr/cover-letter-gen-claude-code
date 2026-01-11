@@ -9,7 +9,8 @@ cache/github/*.json
 # Keep the template/example files, but ignore actual user data
 inputs/resumes/*.md
 !inputs/resumes/resume.md.example
-inputs/jobs/**/job_description.md
+inputs/jobs/**/*.md
+!inputs/jobs/**/*.example
 inputs/sample_letters/*.md
 !inputs/sample_letters/example.md
 
