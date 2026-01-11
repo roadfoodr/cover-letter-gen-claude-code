@@ -28,6 +28,12 @@ config.yaml
 *~
 .DS_Store
 
+# Cursor IDE specific
+.cursor/
+.cursorignore
+.cursorindexingignore
+.specstory/
+
 # OS files
 Thumbs.db
 desktop.ini
@@ -38,4 +44,5 @@ desktop.ini
 
 # Claude Code specific (if any)
 .claude/.cache/
+.claude/settings.local.json
 
