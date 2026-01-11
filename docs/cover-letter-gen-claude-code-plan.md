@@ -45,8 +45,8 @@ cover-letter-gen/
 │
 ├── outputs/
 │   └── {company_name}_{YYYY-MM-DD}/
-│       ├── cover_letter.md
-│       ├── reasoning.md
+│       ├── cover_letter_{HH-MM}.md
+│       ├── reasoning_{HH-MM}.md
 │       ├── feedback.md                 # Created for refinement iterations
 │       └── analysis/
 │           ├── job_analysis.json
@@ -136,8 +136,8 @@ cover-letter-gen/
 ### Step 5: Letter Composition
 - Read `skills/letter-composer/SKILL.md`
 - Input: All three analysis JSONs + all files in `inputs/sample_letters/`
-- Output: `outputs/{company}_{date}/cover_letter.md`
-- Output: `outputs/{company}_{date}/reasoning.md`
+- Output: `outputs/{company}_{date}/cover_letter_{HH-MM}.md`
+- Output: `outputs/{company}_{date}/reasoning_{HH-MM}.md`
 
 ### Step 6: Summary
 - Print paths to generated files
@@ -160,7 +160,7 @@ cover-letter-gen/
 1. User edits `outputs/{company}_{date}/feedback.md` with refinement instructions
 2. User runs `/refine-cover-letter {company} {date}`
 3. Command re-runs only letter-composer using existing analysis + feedback
-4. Overwrites `cover_letter.md` and `reasoning.md` in place
+4. Creates new timestamped files `cover_letter_{HH-MM}.md` and `reasoning_{HH-MM}.md` (preserves previous versions)
 
 **Deliverables:**
 - `.claude/commands/refine-cover-letter.md`

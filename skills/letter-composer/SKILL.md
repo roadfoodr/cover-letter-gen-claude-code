@@ -22,14 +22,14 @@ The skill generates both a cover letter (markdown format) and a reasoning docume
 - `outputs/{company}_{date}/feedback.md` - Refinement instructions for iterating on a draft (if present, incorporate while preserving core style matching)
 - `config.yaml` - Configuration file that may contain preferences like tone, length, emphasis areas (use as fallback if sample letters are missing)
 
-The company name and date will be provided in the execution context, and you should read all the analysis files and sample letters.
+The company name, date, and timestamp (in `HH-MM` format) will be provided in the execution context. The timestamp should be used for both `cover_letter_{time}.md` and `reasoning_{time}.md` filenames to ensure they are paired together. You should read all the analysis files and sample letters.
 
 ## Output
 
 **Primary Output Files:**
-- `outputs/{company}_{date}/cover_letter.md` - The generated cover letter in markdown format. This must match the tone, length, and style of the sample letters.
+- `outputs/{company}_{date}/cover_letter_{time}.md` - The generated cover letter in markdown format. This must match the tone, length, and style of the sample letters. The timestamp `{time}` is in `HH-MM` format (24-hour format, e.g., `14-30` for 2:30 PM) and matches the reasoning document timestamp.
 
-- `outputs/{company}_{date}/reasoning.md` - Explanation of content choices for each paragraph, including:
+- `outputs/{company}_{date}/reasoning_{time}.md` - Explanation of content choices for each paragraph, including:
   - Purpose of each paragraph
   - Source materials that informed the content (job_analysis, resume_matches, github_matches, sample_letters)
   - How each paragraph matches the style from sample letters
@@ -258,8 +258,8 @@ Sincerely,
    - Validate against `schemas/composed-letter.json`
 
 7. Write outputs to specified paths:
-   - Write cover letter to `outputs/{company}_{date}/cover_letter.md`
-   - Write reasoning to `outputs/{company}_{date}/reasoning.md`
+   - Write cover letter to `outputs/{company}_{date}/cover_letter_{time}.md` (where `{time}` is the timestamp in `HH-MM` format provided in the execution context)
+   - Write reasoning to `outputs/{company}_{date}/reasoning_{time}.md` (using the same timestamp as the cover letter)
    - Optionally write metadata to `outputs/{company}_{date}/analysis/composed_letter_metadata.json`
    - Ensure output directory exists before writing
 

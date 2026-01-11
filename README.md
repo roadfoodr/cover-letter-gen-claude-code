@@ -75,8 +75,8 @@ The tool will:
 - Save everything to `outputs/{company}_{YYYY-MM-DD}/`
 
 **Outputs include:**
-- `cover_letter.md` - Your generated cover letter
-- `reasoning.md` - Explanation of content choices and style matching
+- `cover_letter_{HH-MM}.md` - Your generated cover letter (timestamped to prevent overwriting)
+- `reasoning_{HH-MM}.md` - Explanation of content choices and style matching (timestamped to match the cover letter)
 - `analysis/` - JSON files with all intermediate analysis (job requirements, resume matches, GitHub matches)
 
 ### Refine a Cover Letter
@@ -89,5 +89,5 @@ To iterate on a draft without re-analyzing everything:
    /refine-cover-letter {company} {date}
    ```
 
-The tool will regenerate the cover letter using the existing analysis while incorporating your feedback and maintaining the style from your sample letters.
+The tool will regenerate the cover letter using the existing analysis while incorporating your feedback and maintaining the style from your sample letters. Each refinement creates new timestamped files (e.g., `cover_letter_14-30.md`), preserving all previous versions.
 

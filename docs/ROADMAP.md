@@ -94,7 +94,7 @@ Four comprehensive JSON Schema files (Draft 7) for structured output validation:
    - **Date Completed:** 2026-01-11
    - Synthesizes everything into final cover letter with PRIMARY EMPHASIS on matching tone, length, and style from sample letters
    - Input: All three analysis JSONs + sample letters from `inputs/sample_letters/` + optional feedback.md
-   - Output: `outputs/{company}_{date}/cover_letter.md` and `reasoning.md` (optional metadata JSON)
+   - Output: `outputs/{company}_{date}/cover_letter_{HH-MM}.md` and `reasoning_{HH-MM}.md` (optional metadata JSON)
    - Must validate against `schemas/composed-letter.json` (for optional metadata)
    - Includes comprehensive processing instructions with CRITICAL style matching requirements:
      - Tone analysis (word choice, formality, enthusiasm level, sentence structure)
@@ -153,7 +153,7 @@ All four skill files have been created with comprehensive instructions. Each ski
     - Sample letters from `inputs/sample_letters/`
     - Optional feedback.md for refinement instructions
     - Config.yaml for preferences
-  - Overwrites `cover_letter.md` and `reasoning.md` in place
+  - Creates new timestamped files `cover_letter_{HH-MM}.md` and `reasoning_{HH-MM}.md` (preserves previous versions)
   - Maintains style matching from sample letters while incorporating feedback
   - Provides summary with word count comparison
   - Enables quick iteration without re-analyzing inputs

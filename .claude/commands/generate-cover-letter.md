@@ -10,7 +10,8 @@
 1. Read `config.yaml` to extract the GitHub username (optional field)
    - If GitHub username is not configured or empty, issue an informational message: "GitHub username not configured. Will check for cached GitHub data; if unavailable, pipeline will proceed with resume matching only."
 2. Get the current date in `YYYY-MM-DD` format
-3. Create output directory structure: `outputs/{company}_{date}/analysis/`
+3. Get the current time in `HH-MM` format (24-hour format, e.g., `14-30` for 2:30 PM)
+4. Create output directory structure: `outputs/{company}_{date}/analysis/`
 4. Verify that `inputs/jobs/{company}/` directory exists
    - If it doesn't exist, stop execution and inform the user
 5. Verify that at least one `.md` file exists in `inputs/jobs/{company}/` (excluding `.example` files)
@@ -87,8 +88,9 @@
 5. Perform the letter composition according to the skill instructions
    - **CRITICAL**: The skill emphasizes PRIMARY EMPHASIS on matching tone, length, and style from sample letters
    - Ensure style matching is achieved, not just attempted
-6. Write the cover letter to `outputs/{company}_{date}/cover_letter.md`
-7. Write the reasoning document to `outputs/{company}_{date}/reasoning.md`
+   - **NOTE**: The timestamp `{time}` (from Step 1) should be used for the output filenames
+6. Write the cover letter to `outputs/{company}_{date}/cover_letter_{time}.md`
+7. Write the reasoning document to `outputs/{company}_{date}/reasoning_{time}.md`
 8. Optionally create metadata JSON conforming to `schemas/composed-letter.json` if desired
 
 ### Step 6: Summary and Completion
@@ -96,8 +98,8 @@
 1. Print a summary of the execution:
    - Company name and date
    - Paths to all generated files:
-     - `outputs/{company}_{date}/cover_letter.md`
-     - `outputs/{company}_{date}/reasoning.md`
+     - `outputs/{company}_{date}/cover_letter_{time}.md`
+     - `outputs/{company}_{date}/reasoning_{time}.md`
      - `outputs/{company}_{date}/analysis/job_analysis.json`
      - `outputs/{company}_{date}/analysis/resume_matches.json`
      - `outputs/{company}_{date}/analysis/github_matches.json` (only if it exists)
