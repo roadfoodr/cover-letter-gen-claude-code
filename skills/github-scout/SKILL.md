@@ -22,7 +22,9 @@ This configuration file contains:
 
 **Optional Input File:** `cache/github/repos.json`
 
-If this file exists, it contains previously cached GitHub API responses. You should check this file first before making API calls to avoid rate limiting and improve performance.
+If this file exists, it contains previously cached GitHub API responses. You should check this file's age before deciding whether to use it or re-fetch from GitHub.
+
+**Prerequisites:** This skill requires the `gh` CLI tool to be installed and authenticated. The `gh` CLI is used for all GitHub API calls. If `gh` is not available or not authenticated, you MUST warn the user rather than silently falling back to stale cache data.
 
 The company name and date will be provided in the execution context, and you should read the corresponding job analysis file and configuration file.
 
@@ -45,17 +47,27 @@ Read `config.yaml` to obtain the GitHub username. If the username is missing or 
 
 ### 2. Fetch GitHub Repository Data
 
+**IMPORTANT: Never silently skip the fetch step.** If you cannot fetch fresh data and are falling back to cache, you MUST inform the user with a clear message explaining why (e.g., cache age, what was used, and how to fix it).
+
 **If GitHub username is configured:**
 
-**Check Cache First:**
+**Check Cache Age:**
 - Check if `cache/github/repos.json` exists
-- If it exists and contains recent data (within the last 24 hours), use the cached data
-- If cache is stale or missing, proceed to fetch from GitHub API
+- If it exists, check its modification time using Bash: `stat -c %Y cache/github/repos.json` (Linux/MSYS2) to get the epoch timestamp, then compare against the current time
+- If the cache is less than 24 hours old, use the cached data and inform the user: "Using cached GitHub data (last updated: {timestamp})"
+- If the cache is stale (older than 24 hours) or missing, proceed to fetch from GitHub API
 
-**Fetch from GitHub API:**
-- Use the GitHub username from config.yaml
-- Fetch public repositories for the user
-- You can use web search or API calls to retrieve repository data
+**Fetch from GitHub API using `gh` CLI:**
+- First verify `gh` is available and authenticated by running: `gh auth status`
+- If `gh` is not authenticated or not installed:
+  - **WARN the user**: "WARNING: `gh` CLI is not available/authenticated. Cannot fetch fresh GitHub data."
+  - If stale cache exists, inform the user: "Falling back to stale cache (last updated: {timestamp}). Run `gh auth login` to enable fresh fetches."
+  - If no cache exists, inform the user and output empty matches
+  - **Do NOT silently proceed** — the user must know what happened
+- If `gh` is available, fetch repos using:
+  ```bash
+  gh api users/{username}/repos --paginate --jq '.[] | {name, description: (.description // ""), url: .html_url, language, stars: .stargazers_count, updated_at: .updated_at}'
+  ```
 - For each repository, collect:
   - Repository name
   - Repository URL (full GitHub URL)
@@ -68,13 +80,13 @@ Read `config.yaml` to obtain the GitHub username. If the username is missing or 
 **Cache the Results:**
 - After fetching, save the raw repository data to `cache/github/repos.json`
 - This allows future runs to use cached data and avoid API rate limits
-- Ensure the cache directory exists before writing
+- Ensure the cache directory exists before writing (use `mkdir -p cache/github`)
 
 **If GitHub username is NOT configured:**
 
 **Check Cache Only:**
 - Check if `cache/github/repos.json` exists (regardless of age)
-- If cache exists, use the cached data for matching (no API fetch possible without username)
+- If cache exists, inform the user: "Using cached GitHub data — no username configured for fresh fetch"
 - If cache does not exist, you cannot proceed - this case should have been handled in step 1, but if reached here, output empty matches array
 
 ### 3. Match Repositories to Job Requirements
@@ -235,13 +247,17 @@ Read the schema file at `schemas/github-matches.json` for complete validation ru
 
 1. Read the configuration file from `config.yaml` to obtain the GitHub username
 2. If GitHub username is configured:
-   - Check if `cache/github/repos.json` exists and is recent (within 24 hours)
-   - If cache exists and is fresh, read repository data from cache
-   - If cache is missing or stale, fetch repository data from GitHub API using the username
-   - Save fetched repository data to `cache/github/repos.json` for future use
+   - Check if `cache/github/repos.json` exists
+   - If it exists, check its age using `stat` to get the modification timestamp
+   - If cache is fresh (less than 24 hours old), use cached data and inform the user of cache age
+   - If cache is stale or missing:
+     a. Verify `gh` CLI is available: run `gh auth status`
+     b. If `gh` is available: fetch repos using `gh api users/{username}/repos --paginate` with `--jq` to extract fields
+     c. Save fetched data to `cache/github/repos.json` (create `cache/github/` directory if needed)
+     d. If `gh` is NOT available: **WARN the user explicitly** — do not silently fall back to stale cache. If stale cache exists, inform the user it is being used as a fallback and why. If no cache exists, inform the user and output empty matches.
 3. If GitHub username is NOT configured:
    - Check if `cache/github/repos.json` exists (regardless of age)
-   - If cache exists, read repository data from cache
+   - If cache exists, inform the user: "Using cached GitHub data — no username configured"
    - If cache does not exist, proceed to step 6 with no repository data (will output empty matches)
 4. Read the job analysis file from `outputs/{company}_{date}/analysis/job_analysis.json`
 5. For each repository (if any), analyze how it matches job requirements:
@@ -264,7 +280,8 @@ Read the schema file at `schemas/github-matches.json` for complete validation ru
   - If cache exists, use it for matching and proceed normally
   - If cache does not exist, output an empty matches array `[]` and include a note in the summary explaining that no GitHub username was configured and no cache was available
 - **No repositories found**: If the user has no public repositories, output an empty matches array and note this in the summary
-- **API failures**: If GitHub API calls fail, check if cached data exists and use it even if stale. If no cache exists, output an empty matches array and note the API failure in the summary
+- **API failures**: If `gh api` calls fail, **WARN the user** with the error details. Then check if cached data exists and use it even if stale, but inform the user: "WARNING: GitHub API fetch failed ({reason}). Falling back to stale cache from {date}." If no cache exists, output an empty matches array and note the API failure in the summary
+- **`gh` CLI not installed or not authenticated**: **WARN the user** with a clear message: "WARNING: `gh` CLI is not available or not authenticated. Run `gh auth login` to enable GitHub data fetching." Then fall back to cache if available (with warning), or output empty matches
 - **Repositories with no matches**: Only include repositories with relevance scores of 1 or higher. Repositories with score 0 should be excluded from the matches array
 - **Empty repositories**: Repositories with no code, only README, or very minimal content should receive lower relevance scores (1-3) unless they demonstrate specific skills through documentation
 - **Private repositories**: Only analyze public repositories. Private repositories cannot be accessed via the public API
